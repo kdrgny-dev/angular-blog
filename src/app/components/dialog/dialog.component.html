@@ -1,0 +1,110 @@
+<div class="text-gray-400 w-full relative">
+  <div
+    class="p-2 rounded-full w-7 h-7 flex items-center justify-center bg-black text-white text-sm absolute -top-2 -right-2 cursor-pointer"
+    (click)="closeDialog()"
+  >
+    X
+  </div>
+  <div class="flex flex-col gap-3 bg-white p-3 rounded">
+    <div class="text-xl pb-1 border-b border-gray-300 w-full">
+      {{ isUpdate ? "Edit Post" : "View Post" }}
+    </div>
+    <div *ngIf="!isUpdate">
+      <div class="text-xl p-2 truncate">{{ this.title }}</div>
+      <div>
+        <img
+          src="assets/images/image{{ this.imgUrl }}.jpg"
+          alt="image"
+          class="w-full h-64 object-cover"
+        />
+      </div>
+      <div class="p-3">
+        <p class="text-ellipsis">
+          {{ this.body }}
+        </p>
+        <div
+          class="text-2xl font-semibold pb-2 border-b-2 border-slate-200 text-black mt-2"
+        >
+          Comments
+        </div>
+        <div class="flex flex-col gap-2">
+          <div
+            *ngFor="let item of commentsData"
+            class="bg-slate-400 rounded p-2 border border-slate-600 text-black text-sm flex flex-col gap-3"
+          >
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full">
+                <img
+                  src="assets/images/profile/profile{{ item.userId }}.jpg"
+                  alt="{{ item.name }}"
+                  class="w-full h-full rounded-full object-cover"
+                />
+              </div>
+              <div class="font-semibold">
+                {{ item.name }} - {{ item.email }}
+              </div>
+            </div>
+            <div class="text-sm">{{ item.body }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isUpdate">
+      <form [formGroup]="form">
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-2">
+            <label for="title" class="text-sm">Title</label>
+            <input
+              type="text"
+              id="title"
+              class="border border-gray-300 rounded p-2 {{
+                !form.get('title')?.valid && form.get('title')?.touched
+                  ? 'border-red-600'
+                  : ''
+              }}"
+              formControlName="title"
+            />
+            <span
+              *ngIf="!form.get('title')?.valid && form.get('title')?.touched"
+              class="text-xs font-bold text-red-600"
+            >
+              Title is required
+            </span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="body" class="text-sm">Body</label>
+            <textarea
+              id="body"
+              class="border border-gray-300 rounded p-2 {{
+                !form.get('body')?.valid && form.get('body')?.touched
+                  ? 'border-red-600'
+                  : ''
+              }}"
+              formControlName="body"
+              rows="10"
+              cols="30"
+            ></textarea>
+            <span
+              *ngIf="!form.get('body')?.valid && form.get('body')?.touched"
+              class="text-xs font-bold text-red-600"
+            >
+              Body is required
+            </span>
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-2 mt-4">
+          <button class="bg-red-600 text-white px-4 py-2 rounded">
+            Delete
+          </button>
+          <button
+            (click)="onSubmit()"
+            [disabled]="!form.valid"
+            class="bg-green-600 text-white px-4 py-2 rounded disabled:bg-green-600/50 disabled:cursor-not-allowed"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
